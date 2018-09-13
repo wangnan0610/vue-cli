@@ -34,9 +34,19 @@ module.exports = {
 - Type: `string`
 - Default: `'/'`
 
-  The base URL your application will be deployed at. By default Vue CLI assumes your app will be deployed at the root of a domain, e.g. `https://www.my-app.com/`. If your app is deployed at a sub-path, you will need to specify that sub-path using this option. For example, if your app is deployed at `https://www.foobar.com/my-app/`, set `baseUrl` to `'/my-app/'`.
+  The base URL your application bundle will be deployed at. This is the equivalent of webpack's `output.publicPath`, but Vue CLI also needs this value for other purposes, so you should **always use `baseUrl` instead of modifying webpack `output.publicPath`**.
 
-  Setting this value correctly is necessary for your static assets to be loaded properly in production.
+  By default, Vue CLI assumes your app will be deployed at the root of a domain, e.g. `https://www.my-app.com/`. If your app is deployed at a sub-path, you will need to specify that sub-path using this option. For example, if your app is deployed at `https://www.foobar.com/my-app/`, set `baseUrl` to `'/my-app/'`.
+
+  The value can also be set to an empty string (`''`) or a relative path (`./`) so that all assets are linked using relative paths. This allows the built bundle to be deployed under any public path, or used in a file system based environment like a Cordova hybrid app.
+
+  ::: warning Limitations of relative baseUrl
+  Relative `baseUrl` has some limitations and should be avoided when:
+
+  - You are using HTML5 `history.pushState` routing;
+
+  - You are using the `pages` option to build a multi-paged app.
+  :::
 
   This value is also respected during development. If you want your dev server to be served at root instead, you can use a conditional value:
 
@@ -47,12 +57,6 @@ module.exports = {
       : '/'
   }
   ```
-
-  The value can also be set to an empty string (`''`) so that all assets are linked using relative paths, so that the bundle can be used in a file system based environment like a Cordova hybrid app. **Note that this will force the generated CSS files to always be placed at the root of the output directory to ensure urls in your CSS work correctly.**
-
-  ::: tip
-  Always use `baseUrl` instead of modifying webpack `output.publicPath`.
-  :::
 
 ### outputDir
 
@@ -196,7 +200,7 @@ module.exports = {
 
   Note that this only affects tags injected by `html-webpack-plugin` - tags directly added in the source template (`public/index.html`) are not affected.
 
-  See also: [CORS setting attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes)
+  See also: [CORS settings attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes)
 
 ### integrity
 
@@ -344,7 +348,7 @@ module.exports = {
 - Type: `boolean`
 - Default: `require('os').cpus().length > 1`
 
-  Whether to use `thread-loader` for Babel or TypeScript transpilation.
+  Whether to use `thread-loader` for Babel or TypeScript transpilation. This is enabled for production builds when the system has more than 1 CPU cores.
 
 ### pwa
 

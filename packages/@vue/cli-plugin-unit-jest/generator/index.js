@@ -21,7 +21,7 @@ module.exports = (api, _, __, invoking) => {
       'transform': {
         // process *.vue files with vue-jest
         '^.+\\.vue$': 'vue-jest',
-        '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub'
+        '.+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub'
       },
       // support the same @ -> src alias mapping in source code
       'moduleNameMapper': {
@@ -115,10 +115,7 @@ const applyTS = module.exports.applyTS = (api, invoking) => {
 const applyESLint = module.exports.applyESLint = api => {
   api.render(files => {
     files['tests/unit/.eslintrc.js'] = api.genJSConfig({
-      env: { jest: true },
-      rules: {
-        'import/no-extraneous-dependencies': 'off'
-      }
+      env: { jest: true }
     })
   })
 }

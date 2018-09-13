@@ -62,7 +62,7 @@ test('loading plugins from package.json', () => {
   mockPkg({
     devDependencies: {
       'bar': '^1.0.0',
-      '@vue/cli-plugin-babel': '^3.0.0',
+      '@vue/cli-plugin-babel': '^3.0.3',
       'vue-cli-plugin-foo': '^1.0.0'
     }
   })
@@ -231,6 +231,28 @@ test('api: configureWebpack returning object', () => {
 
   const config = service.resolveWebpackConfig()
   expect(config.output.path).toBe('test-dist-3')
+})
+
+test('api: configureWebpack preserve ruleNames', () => {
+  const service = createMockService([
+    {
+      id: 'babel',
+      apply: require('@vue/cli-plugin-babel')
+    },
+    {
+      id: 'test',
+      apply: api => {
+        api.configureWebpack({
+          module: {
+            rules: []
+          }
+        })
+      }
+    }
+  ])
+
+  const config = service.resolveWebpackConfig()
+  expect(config.module.rules[0].__ruleNames).toEqual(['js'])
 })
 
 test('api: configureDevServer', () => {
